@@ -102,7 +102,6 @@ canvas.addEventListener('mousemove', e => {
         arrows.push(currentArrow);
         isDragging = true;
     }
-    const mousePos = getMousePos(e);
     if (mode === 'add') {
         currentArrow.endX = mousePos.x;
         currentArrow.endY = mousePos.y;
