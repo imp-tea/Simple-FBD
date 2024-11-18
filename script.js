@@ -399,7 +399,11 @@ function updateForceList() {
         if (arrow.subLabel != '') {
             forceString += "_"+arrow.subLabel;
         }
-        forceString += ": " + Math.floor(Math.sqrt(arrow.endX*arrow.endX + arrow.endY*arrow.endY)) + " N @ " + Math.floor(Math.atan2(arrow.endY, arrow.endX)*180/3.14159) +"*"
+        let dx = arrow.endX - arrow.startX;
+        let dy = arrow.endY - arrow.startY;
+        let d = Math.floor(Math.sqrt(dx^dx + dy*dy))
+        let a = Math.floor(Math.atan2(dy, dx)*180/3.14159)
+        forceString += ": " + d + " N @ " + a +"*"
         let node = document.createElement("li");
         let textnode = document.createTextNode(forceString);
         node.appendChild(textnode);
