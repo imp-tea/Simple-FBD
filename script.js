@@ -114,7 +114,7 @@ canvas.addEventListener('mousemove', e => {
         if (angleSnapping) {
             snapArrowToAngle(currentArrow);
         }
-
+        updateForceList();
         draw();
     }
 });
@@ -123,7 +123,7 @@ canvas.addEventListener('mouseup', () => {
     isDrawing = false;
     isDragging = false;
     currentArrow = null;
-    //updateForceList();
+    updateForceList();
 });
 
 canvas.addEventListener('touchstart', e => {
@@ -181,7 +181,7 @@ canvas.addEventListener('touchend', e => {
     isDrawing = false;
     isDragging = false;
     currentArrow = null;
-    //updateForceList();
+    updateForceList();
 });
 
 function getMousePos(evt) {
@@ -401,8 +401,13 @@ function updateForceList() {
         }
         let dx = arrow.endX - arrow.startX;
         let dy = arrow.endY - arrow.startY;
-        let d = Math.floor(Math.sqrt(dx*dx + dy*dy)/20)
-        let a = Math.floor(Math.atan2(dy, dx)*180/3.14159)
+        let d = Math.floor(Math.sqrt(dx*dx + dy*dy)/40 + 0.5)
+        let a = Math.floor(Math.atan2(dy, dx)*180/3.14159 + 0.5)
+        if (a < 0) {
+            a += 360;
+        } else if (a > 360) {
+            a -= 360;
+        }
         forceString += ": " + d + " N @ " + a +"*"
         let node = document.createElement("li");
         let textnode = document.createTextNode(forceString);
