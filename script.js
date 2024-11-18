@@ -1,75 +1,3 @@
-const canvas = document.getElementById('fbdCanvas');
-const ctx = canvas.getContext('2d');
-
-let arrows = [];
-let mode = 'add';
-let isDrawing = false;
-let currentArrow = null;
-let angleSnapping = false;
-let showNetForce = false;
-let snapToGrid = true;
-
-const numCells = 10; // Maintain a 10x10 grid
-const cellSize = canvas.width / numCells;
-
-const centerX = canvas.width / 2;
-const centerY = canvas.height / 2;
-
-document.querySelectorAll('input[name="mode"]').forEach(radio => {
-    radio.addEventListener('change', e => {
-        mode = e.target.value;
-    });
-});
-
-document.getElementById('angleSnapping').addEventListener('change', e => {
-    angleSnapping = e.target.checked;
-});
-
-document.getElementById('showNetForce').addEventListener('change', e => {
-    showNetForce = e.target.checked;
-    draw();
-});
-
-document.getElementById('snapToGrid').addEventListener('change', e => {
-    snapToGrid = e.target.checked;
-});
-
-document.getElementById('resetButton').addEventListener('click', () => {
-    arrows = [];
-    draw();
-});
-
-document.getElementById('screenshotButton').addEventListener('click', () => {
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tempCtx = tempCanvas.getContext('2d');
-
-    // Copy original content to the temp canvas
-    tempCtx.drawImage(canvas, 0, 0);
-
-    // Invert colors
-    const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-    const data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
-        data[i] = 255 - data[i];     // Red
-        data[i + 1] = 255 - data[i + 1]; // Green
-        data[i + 2] = 255 - data[i + 2]; // Blue
-    }
-    tempCtx.putImageData(imageData, 0, 0);
-
-    // Copy inverted image to clipboard
-    tempCanvas.toBlob(blob => {
-        const item = new ClipboardItem({ 'image/png': blob });
-        navigator.clipboard.write([item]).then(() => {
-            alert('Screenshot copied to clipboard!');
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-            alert('Failed to copy screenshot to clipboard.');
-        });
-    });
-});
-
 canvas.addEventListener('mousedown', e => {
     const mousePos = getMousePos(e);
     if (mode === 'add') {
@@ -80,6 +8,7 @@ canvas.addEventListener('mousedown', e => {
             endX: mousePos.x,
             endY: mousePos.y,
             label: 'F',
+            subscript: '', // Add subscript field
         };
         arrows.push(currentArrow);
     } else if (mode === 'delete' || mode === 'label') {
@@ -89,103 +18,54 @@ canvas.addEventListener('mousedown', e => {
             currentArrow = null;
             draw();
         } else if (currentArrow && mode === 'label') {
-            const newLabel = prompt('Enter label:', currentArrow.label);
-            if (newLabel !== null) {
-                currentArrow.label = newLabel;
+            const labelDialog = document.createElement('div');
+            labelDialog.style.position = 'fixed';
+            labelDialog.style.top = '50%';
+            labelDialog.style.left = '50%';
+            labelDialog.style.transform = 'translate(-50%, -50%)';
+            labelDialog.style.backgroundColor = '#fff';
+            labelDialog.style.padding = '20px';
+            labelDialog.style.border = '1px solid #000';
+            labelDialog.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+
+            const labelInput = document.createElement('input');
+            labelInput.type = 'text';
+            labelInput.placeholder = 'Main Label';
+            labelInput.value = currentArrow.label;
+
+            const subscriptInput = document.createElement('input');
+            subscriptInput.type = 'text';
+            subscriptInput.placeholder = 'Subscript';
+            subscriptInput.value = currentArrow.subscript;
+
+            const submitButton = document.createElement('button');
+            submitButton.textContent = 'OK';
+            submitButton.onclick = () => {
+                currentArrow.label = labelInput.value;
+                currentArrow.subscript = subscriptInput.value;
+                document.body.removeChild(labelDialog);
                 draw();
-            }
-            currentArrow = null;
+            };
+
+            const cancelButton = document.createElement('button');
+            cancelButton.textContent = 'Cancel';
+            cancelButton.onclick = () => {
+                document.body.removeChild(labelDialog);
+            };
+
+            labelDialog.appendChild(labelInput);
+            labelDialog.appendChild(document.createElement('br'));
+            labelDialog.appendChild(subscriptInput);
+            labelDialog.appendChild(document.createElement('br'));
+            labelDialog.appendChild(submitButton);
+            labelDialog.appendChild(cancelButton);
+
+            document.body.appendChild(labelDialog);
         }
     }
 });
 
-canvas.addEventListener('mousemove', e => {
-    if (!isDrawing) return;
-    const mousePos = getMousePos(e);
-    if (mode === 'add') {
-        currentArrow.endX = mousePos.x;
-        currentArrow.endY = mousePos.y;
-
-        if (snapToGrid) {
-            currentArrow.endX = Math.round(currentArrow.endX / cellSize) * cellSize;
-            currentArrow.endY = Math.round(currentArrow.endY / cellSize) * cellSize;
-        }
-
-        if (angleSnapping) {
-            snapArrowToAngle(currentArrow);
-        }
-
-        draw();
-    }
-});
-
-canvas.addEventListener('mouseup', () => {
-    isDrawing = false;
-    currentArrow = null;
-});
-
-function getMousePos(evt) {
-    const rect = canvas.getBoundingClientRect();
-    return {
-        x: (evt.clientX - rect.left) * (canvas.width / rect.width),
-        y: (evt.clientY - rect.top) * (canvas.height / rect.height),
-    };
-}
-
-function getArrowAtPosition(pos) {
-    for (let i = arrows.length - 1; i >= 0; i--) {
-        const arrow = arrows[i];
-        const dx = arrow.endX - arrow.startX;
-        const dy = arrow.endY - arrow.startY;
-        const length = Math.hypot(dx, dy);
-        const proj = ((pos.x - arrow.startX) * dx + (pos.y - arrow.startY) * dy) / (length * length);
-        if (proj > 0 && proj < 1) {
-            const closestX = arrow.startX + proj * dx;
-            const closestY = arrow.startY + proj * dy;
-            const distance = Math.hypot(pos.x - closestX, pos.y - closestY);
-            if (distance < 10) {
-                return arrow;
-            }
-        }
-    }
-    return null;
-}
-
-function snapArrowToAngle(arrow) {
-    const dx = arrow.endX - arrow.startX;
-    const dy = arrow.endY - arrow.startY;
-    let angle = Math.atan2(dy, dx);
-    const snapAngle = (15 * Math.PI) / 180; // 15 degrees in radians
-    angle = Math.round(angle / snapAngle) * snapAngle;
-    const length = Math.hypot(dx, dy);
-    arrow.endX = arrow.startX + length * Math.cos(angle);
-    arrow.endY = arrow.startY + length * Math.sin(angle);
-}
-
-function drawGrid() {
-    ctx.strokeStyle = '#555';
-    ctx.lineWidth = 1;
-
-    // Draw vertical grid lines
-    for (let i = 0; i <= numCells; i++) {
-        const x = i * cellSize;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-    }
-
-    // Draw horizontal grid lines
-    for (let j = 0; j <= numCells; j++) {
-        const y = j * cellSize;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-    }
-}
-
-function drawArrow(startX, startY, endX, endY, label = '', color = '#ffffff', lineWidth = 4) {
+function drawArrow(startX, startY, endX, endY, label = '', subscript = '', color = '#ffffff', lineWidth = 4) {
     const dx = endX - startX;
     const dy = endY - startY;
     const angle = Math.atan2(dy, dx);
@@ -215,33 +95,17 @@ function drawArrow(startX, startY, endX, endY, label = '', color = '#ffffff', li
     ctx.lineTo(pointX, pointY);
     ctx.fill();
 
-    // Draw label
+    // Draw label with subscript
     if (label) {
         ctx.font = '14px Arial';
         ctx.fillStyle = color;
         const labelOffset = 20; // Additional padding
         ctx.fillText(label, endX + labelOffset * Math.cos(angle), endY + labelOffset * Math.sin(angle));
+        if (subscript) {
+            ctx.font = '10px Arial'; // Smaller font for subscript
+            ctx.fillText(subscript, endX + labelOffset * Math.cos(angle) + 14, endY + labelOffset * Math.sin(angle));
+        }
     }
-}
-
-function drawNetForce() {
-    const netForce = calculateNetForce();
-    if (netForce.netX === 0 && netForce.netY === 0) return;
-
-    const endX = centerX + netForce.netX;
-    const endY = centerY + netForce.netY;
-
-    drawArrow(centerX, centerY, endX, endY, 'Net Force', 'red', 4);
-}
-
-function calculateNetForce() {
-    let netX = 0;
-    let netY = 0;
-    arrows.forEach(arrow => {
-        netX += arrow.endX - arrow.startX;
-        netY += arrow.endY - arrow.startY;
-    });
-    return { netX, netY };
 }
 
 function draw() {
@@ -257,7 +121,7 @@ function draw() {
 
     // Draw arrows
     arrows.forEach(arrow => {
-        drawArrow(arrow.startX, arrow.startY, arrow.endX, arrow.endY, arrow.label, '#ffffff', 4);
+        drawArrow(arrow.startX, arrow.startY, arrow.endX, arrow.endY, arrow.label, arrow.subscript, '#ffffff', 4);
     });
 
     // Draw net force
