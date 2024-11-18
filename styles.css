@@ -37,3 +37,7 @@ canvas {
     border: 1px solid #ffffff;
     background-color: #1e1e1e;
 }
+
+#labelDialog {
+    color: black;
+}
