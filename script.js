@@ -5,9 +5,9 @@ let arrows = [];
 let mode = 'add';
 let isDrawing = false;
 let currentArrow = null;
-let angleSnapping = true;
+let angleSnapping = false;
 let showNetForce = false;
-let snapToGrid = false;
+let snapToGrid = true;
 
 const numCells = 10; // Maintain a 10x10 grid
 const cellSize = canvas.width / numCells;
