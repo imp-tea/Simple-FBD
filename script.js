@@ -175,7 +175,7 @@ canvas.addEventListener('touchmove', e => {
     }
 });
 
-canvas.addEventListener('touchend', () => {
+canvas.addEventListener('touchend', e => {
     e.preventDefault();
     isDrawing = false;
     isDragging = false;
@@ -187,6 +187,15 @@ function getMousePos(evt) {
     return {
         x: (evt.clientX - rect.left) * (canvas.width / rect.width),
         y: (evt.clientY - rect.top) * (canvas.height / rect.height),
+    };
+}
+
+function getTouchPos(evt) {
+    const rect = canvas.getBoundingClientRect();
+    const touch = evt.touches[0]; // Get the first touch point
+    return {
+        x: (touch.clientX - rect.left) * (canvas.width / rect.width),
+        y: (touch.clientY - rect.top) * (canvas.height / rect.height),
     };
 }
 
@@ -377,15 +386,6 @@ function showLabelDialog(arrow) {
     // Add event listeners
     okButton.addEventListener('click', onOk);
     cancelButton.addEventListener('click', onCancel);
-}
-
-function getTouchPos(evt) {
-    const rect = canvas.getBoundingClientRect();
-    const touch = evt.touches[0]; // Get the first touch point
-    return {
-        x: (touch.clientX - rect.left) * (canvas.width / rect.width),
-        y: (touch.clientY - rect.top) * (canvas.height / rect.height),
-    };
 }
 
 draw();
