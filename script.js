@@ -88,6 +88,7 @@ canvas.addEventListener('mousedown', e => {
 });
 
 canvas.addEventListener('mousemove', e => {
+    const mousePos = getMousePos(e);
     if (!isDrawing) return;
     if (!isDragging) {
         currentArrow = {
