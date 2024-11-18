@@ -1,6 +1,6 @@
 const canvas = document.getElementById('fbdCanvas');
 const ctx = canvas.getContext('2d');
-
+const forceList = document.getElementById('forceList');
 let arrows = [];
 let mode = 'add';
 let isDrawing = false;
@@ -123,6 +123,7 @@ canvas.addEventListener('mouseup', () => {
     isDrawing = false;
     isDragging = false;
     currentArrow = null;
+    updateForceList();
 });
 
 canvas.addEventListener('touchstart', e => {
@@ -180,6 +181,7 @@ canvas.addEventListener('touchend', e => {
     isDrawing = false;
     isDragging = false;
     currentArrow = null;
+    updateForceList();
 });
 
 function getMousePos(evt) {
@@ -386,6 +388,18 @@ function showLabelDialog(arrow) {
     // Add event listeners
     okButton.addEventListener('click', onOk);
     cancelButton.addEventListener('click', onCancel);
+}
+
+function updateForceList() {
+    while (forceList.firstChild) {
+      forceList.removeChild(div.firstChild);
+    }
+    arrows.forEach(arrow => {
+        //let node = document.createElement("li");
+        let textnode = document.createTextNode(arrow.mainLabel + "_" + arrow.subLabel + ": " + Math.sqrt(arrow.endX*arrow.endX + arrow.endY*arrow.endY) + " N @ " + Math.atan2(arrow.endY, arrow.endX) +"*");
+        //node.appendChild(textnode);
+        forceList.appendChild(textnode);
+    });
 }
 
 draw();
