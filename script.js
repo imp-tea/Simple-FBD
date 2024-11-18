@@ -125,6 +125,63 @@ canvas.addEventListener('mouseup', () => {
     currentArrow = null;
 });
 
+canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const mousePos = getTouchPos(e);
+    if (mode === 'add') {
+        isDrawing = true;
+    } else if (mode === 'delete' || mode === 'label') {
+        currentArrow = getArrowAtPosition(mousePos);
+        if (currentArrow && mode === 'delete') {
+            arrows = arrows.filter(arrow => arrow !== currentArrow);
+            currentArrow = null;
+            draw();
+        } else if (currentArrow && mode === 'label') {
+            showLabelDialog(currentArrow);
+        }
+    }
+});
+
+canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const mousePos = getTouchPos(e);
+    if (!isDrawing) return;
+    if (!isDragging) {
+        currentArrow = {
+            startX: centerX,
+            startY: centerY,
+            endX: mousePos.x,
+            endY: mousePos.y,
+            mainLabel: 'F',
+            subLabel: '',
+        };
+        arrows.push(currentArrow);
+        isDragging = true;
+    }
+    if (mode === 'add') {
+        currentArrow.endX = mousePos.x;
+        currentArrow.endY = mousePos.y;
+
+        if (snapToGrid) {
+            currentArrow.endX = Math.round(currentArrow.endX / cellSize) * cellSize;
+            currentArrow.endY = Math.round(currentArrow.endY / cellSize) * cellSize;
+        }
+
+        if (angleSnapping) {
+            snapArrowToAngle(currentArrow);
+        }
+
+        draw();
+    }
+});
+
+canvas.addEventListener('touchend', () => {
+    e.preventDefault();
+    isDrawing = false;
+    isDragging = false;
+    currentArrow = null;
+});
+
 function getMousePos(evt) {
     const rect = canvas.getBoundingClientRect();
     return {
