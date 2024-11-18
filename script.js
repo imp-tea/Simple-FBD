@@ -379,4 +379,13 @@ function showLabelDialog(arrow) {
     cancelButton.addEventListener('click', onCancel);
 }
 
+function getTouchPos(evt) {
+    const rect = canvas.getBoundingClientRect();
+    const touch = evt.touches[0]; // Get the first touch point
+    return {
+        x: (touch.clientX - rect.left) * (canvas.width / rect.width),
+        y: (touch.clientY - rect.top) * (canvas.height / rect.height),
+    };
+}
+
 draw();
