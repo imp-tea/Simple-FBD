@@ -123,7 +123,7 @@ canvas.addEventListener('mouseup', () => {
     isDrawing = false;
     isDragging = false;
     currentArrow = null;
-    updateForceList();
+    //updateForceList();
 });
 
 canvas.addEventListener('touchstart', e => {
@@ -181,7 +181,7 @@ canvas.addEventListener('touchend', e => {
     isDrawing = false;
     isDragging = false;
     currentArrow = null;
-    updateForceList();
+    //updateForceList();
 });
 
 function getMousePos(evt) {
