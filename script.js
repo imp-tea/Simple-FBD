@@ -395,10 +395,15 @@ function updateForceList() {
       forceList.removeChild(forceList.firstChild);
     }
     arrows.forEach(arrow => {
-        //let node = document.createElement("li");
-        let textnode = document.createTextNode(arrow.mainLabel + "_" + arrow.subLabel + ": " + Math.floor(Math.sqrt(arrow.endX*arrow.endX + arrow.endY*arrow.endY)) + " N @ " + Math.floor(Math.atan2(arrow.endY, arrow.endX)*180/3.14159) +"*");
-        //node.appendChild(textnode);
-        forceList.appendChild(textnode);
+        let forceString = arrow.mainLabel;
+        if (arrow.subLabel != '') {
+            forceString += "_"+arrow.subLabel;
+        }
+        forceString += ": " + Math.floor(Math.sqrt(arrow.endX*arrow.endX + arrow.endY*arrow.endY)) + " N @ " + Math.floor(Math.atan2(arrow.endY, arrow.endX)*180/3.14159) +"*"
+        let node = document.createElement("li");
+        let textnode = document.createTextNode(forceString);
+        node.appendChild(textnode);
+        forceList.appendChild(node);
     });
 }
 
