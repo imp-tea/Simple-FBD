@@ -8,7 +8,7 @@ canvas.addEventListener('mousedown', e => {
             endX: mousePos.x,
             endY: mousePos.y,
             label: 'F',
-            subscript: '', // Add subscript field
+            subscript: 'g', // Add subscript field
         };
         arrows.push(currentArrow);
     } else if (mode === 'delete' || mode === 'label') {
