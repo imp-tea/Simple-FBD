@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Free Body Diagram Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Free Body Diagram Tool</h1>
+    <div class="controls">
+        <div class="checkboxes">
+            <label>
+                <input type="checkbox" id="showNetForce">
+                Show Net Force
+            </label>
+            <label>
+                <input type="checkbox" id="angleSnapping" checked>
+                Angle Snapping
+            </label>
+            <label>
+                <input type="checkbox" id="snapToGrid">
+                Snap to Grid
+            </label>
+        </div>
+        <div class="radio-buttons">
+            <label>
+                <input type="radio" name="mode" value="add" checked>
+                Add Arrows
+            </label>
+            <label>
+                <input type="radio" name="mode" value="label">
+                Add Labels
+            </label>
+            <label>
+                <input type="radio" name="mode" value="delete">
+                Delete Arrows
+            </label>
+        </div>
+        <button id="resetButton">Reset Diagram</button>
+        <button id="screenshotButton">Capture Screenshot</button>
+    </div>
+    <canvas id="fbdCanvas" width="400" height="400"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
