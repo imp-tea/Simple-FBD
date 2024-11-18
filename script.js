@@ -4,6 +4,7 @@ const ctx = canvas.getContext('2d');
 let arrows = [];
 let mode = 'add';
 let isDrawing = false;
+let isDragging = false;
 let currentArrow = null;
 let angleSnapping = false;
 let showNetForce = false;
@@ -74,15 +75,6 @@ canvas.addEventListener('mousedown', e => {
     const mousePos = getMousePos(e);
     if (mode === 'add') {
         isDrawing = true;
-        currentArrow = {
-            startX: centerX,
-            startY: centerY,
-            endX: mousePos.x,
-            endY: mousePos.y,
-            mainLabel: 'F',
-            subLabel: '',
-        };
-        arrows.push(currentArrow);
     } else if (mode === 'delete' || mode === 'label') {
         currentArrow = getArrowAtPosition(mousePos);
         if (currentArrow && mode === 'delete') {
@@ -97,6 +89,18 @@ canvas.addEventListener('mousedown', e => {
 
 canvas.addEventListener('mousemove', e => {
     if (!isDrawing) return;
+    if (!isDragging) {
+        currentArrow = {
+            startX: centerX,
+            startY: centerY,
+            endX: mousePos.x,
+            endY: mousePos.y,
+            mainLabel: 'F',
+            subLabel: '',
+        };
+        arrows.push(currentArrow);
+        isDragging = true;
+    }
     const mousePos = getMousePos(e);
     if (mode === 'add') {
         currentArrow.endX = mousePos.x;
@@ -117,6 +121,7 @@ canvas.addEventListener('mousemove', e => {
 
 canvas.addEventListener('mouseup', () => {
     isDrawing = false;
+    isDragging = false;
     currentArrow = null;
 });
 
