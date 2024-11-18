@@ -401,7 +401,7 @@ function updateForceList() {
         }
         let dx = arrow.endX - arrow.startX;
         let dy = arrow.endY - arrow.startY;
-        let d = Math.floor(Math.sqrt(dx^dx + dy*dy))
+        let d = Math.floor(Math.sqrt(dx*dx + dy*dy)/20)
         let a = Math.floor(Math.atan2(dy, dx)*180/3.14159)
         forceString += ": " + d + " N @ " + a +"*"
         let node = document.createElement("li");
