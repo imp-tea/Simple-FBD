@@ -392,11 +392,11 @@ function showLabelDialog(arrow) {
 
 function updateForceList() {
     while (forceList.firstChild) {
-      forceList.removeChild(div.firstChild);
+      forceList.removeChild(forceList.firstChild);
     }
     arrows.forEach(arrow => {
         //let node = document.createElement("li");
-        let textnode = document.createTextNode(arrow.mainLabel + "_" + arrow.subLabel + ": " + Math.sqrt(arrow.endX*arrow.endX + arrow.endY*arrow.endY) + " N @ " + Math.atan2(arrow.endY, arrow.endX) +"*");
+        let textnode = document.createTextNode(arrow.mainLabel + "_" + arrow.subLabel + ": " + Math.floor(Math.sqrt(arrow.endX*arrow.endX + arrow.endY*arrow.endY)) + " N @ " + Math.floor(Math.atan2(arrow.endY, arrow.endX)*180/3.14159) +"*");
         //node.appendChild(textnode);
         forceList.appendChild(textnode);
     });
