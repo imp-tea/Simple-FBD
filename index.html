@@ -44,7 +44,13 @@
         <button id="screenshotButton">Capture Screenshot</button>
     </div>
     <canvas id="fbdCanvas" width="400" height="400"></canvas>
-
+    <div id="labelDialog" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; padding:20px; border:1px solid black; z-index:1000;">
+        <h3>Enter Label</h3>
+        <label>Main Text: <input type="text" id="mainLabelInput"></label><br><br>
+        <label>Subscript: <input type="text" id="subLabelInput"></label><br><br>
+        <button id="labelOkButton">OK</button>
+        <button id="labelCancelButton">Cancel</button>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
