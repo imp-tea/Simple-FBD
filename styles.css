@@ -1,43 +1,233 @@
 body {
-    background-color: #2b2b2b;
-    color: #ffffff;
-    font-family: American Typewriter, serif;
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     text-align: center;
     margin: 0;
     padding: 20px;
 }
 
 h1 {
+    margin-bottom: 4px;
+    color: #ffffff;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    color: #888;
+    margin-top: 0;
     margin-bottom: 20px;
+    font-size: 0.9em;
 }
 
 .controls {
-    margin-bottom: 20px;
+    max-width: 640px;
+    margin: 0 auto 20px;
+    background: #16213e;
+    border-radius: 10px;
+    padding: 16px 20px;
+    border: 1px solid #1a3a5c;
+}
+
+.control-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.control-row:last-of-type {
+    margin-bottom: 0;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.group-label {
+    font-weight: 600;
+    color: #a0c4ff;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .controls label {
-    margin-right: 15px;
     cursor: pointer;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.controls input[type="checkbox"],
+.controls input[type="radio"] {
+    accent-color: #4a8fe7;
+}
+
+.scale-group {
+    width: 100%;
+    justify-content: center;
+}
+
+.scale-group input[type="range"] {
+    width: 180px;
+    accent-color: #4a8fe7;
+    vertical-align: middle;
+}
+
+#scaleDisplay {
+    font-size: 0.85em;
+    color: #a0c4ff;
+    min-width: 90px;
+    display: inline-block;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 12px;
 }
 
 button {
-    background-color: #444;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
+    background-color: #1a3a5c;
+    color: #e0e0e0;
+    border: 1px solid #2a5a8c;
+    padding: 8px 16px;
     cursor: pointer;
-    margin-right: 10px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    transition: background-color 0.15s, border-color 0.15s;
 }
 
 button:hover {
-    background-color: #555;
+    background-color: #2a5a8c;
+    border-color: #4a8fe7;
+}
+
+button:active {
+    background-color: #4a8fe7;
 }
 
 canvas {
-    border: 1px solid #ffffff;
-    background-color: #1e1e1e;
+    border: 1px solid #2a5a8c;
+    background-color: #0f1626;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+#labelDialogOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
 }
 
 #labelDialog {
-    color: black;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #16213e;
+    color: #e0e0e0;
+    padding: 24px;
+    border: 1px solid #2a5a8c;
+    border-radius: 10px;
+    z-index: 1000;
+    min-width: 260px;
+}
+
+#labelDialog h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #a0c4ff;
+}
+
+#labelDialog label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 0.9em;
+}
+
+#labelDialog input[type="text"] {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    padding: 6px 8px;
+    border: 1px solid #2a5a8c;
+    border-radius: 4px;
+    background: #0f1626;
+    color: #e0e0e0;
+    font-size: 0.95em;
+    box-sizing: border-box;
+}
+
+#labelDialog input[type="text"]:focus {
+    outline: none;
+    border-color: #4a8fe7;
+}
+
+.dialog-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+#forceList {
+    max-width: 640px;
+    margin: 16px auto 0;
+    text-align: left;
+    padding: 0;
+    list-style: none;
+}
+
+#forceList .force-item {
+    background: #16213e;
+    border: 1px solid #1a3a5c;
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin-bottom: 6px;
+    font-size: 0.95em;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+#forceList .force-item.net-force {
+    border-color: #8b3a3a;
+    background: #2a1a1a;
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+#forceList .force-item .force-name {
+    font-weight: 600;
+}
+
+#forceList .force-item .force-name sub {
+    font-weight: 400;
+    font-size: 0.8em;
+}
+
+#forceList .force-item .force-value {
+    color: #a0c4ff;
+}
+
+#forceList .force-item.net-force .force-value {
+    color: #ff9b9b;
 }

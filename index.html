@@ -2,55 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Huddleston's Simple FBD Tool</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Huddleston's Simple FBD Creator</h1>
-    <p>Use this tool to create basic free body diagrams. Click "Capture Screenshot" to copy the diagram to your clipboard.</p>
+    <p class="subtitle">Create free body diagrams. Click "Capture Screenshot" to copy the diagram to your clipboard.</p>
     <div class="controls">
-        <div class="checkboxes">
-            <b>Options:</b>
-            <label>
-                <input type="checkbox" id="showNetForce">
-                Show Net Force
-            </label>
-            <label>
-                <input type="checkbox" id="angleSnapping">
-                Angle Snapping
-            </label>
-            <label>
-                <input type="checkbox" id="snapToGrid" checked>
-                Snap to Grid
-            </label>
+        <div class="control-row">
+            <div class="control-group">
+                <span class="group-label">Options:</span>
+                <label>
+                    <input type="checkbox" id="showNetForce">
+                    Show Net Force
+                </label>
+                <label>
+                    <input type="checkbox" id="angleSnapping">
+                    Angle Snapping
+                </label>
+                <label>
+                    <input type="checkbox" id="snapToGrid" checked>
+                    Snap to Grid
+                </label>
+            </div>
+            <div class="control-group">
+                <span class="group-label">Editing Mode:</span>
+                <label>
+                    <input type="radio" name="mode" value="add" checked>
+                    Add Arrows
+                </label>
+                <label>
+                    <input type="radio" name="mode" value="label">
+                    Add Labels
+                </label>
+                <label>
+                    <input type="radio" name="mode" value="delete">
+                    Delete Arrows
+                </label>
+            </div>
         </div>
-        <div class="radio-buttons">
-            <b>Editing Mode:</b>
-            <label>
-                <input type="radio" name="mode" value="add" checked>
-                Add Arrows
-            </label>
-            <label>
-                <input type="radio" name="mode" value="label">
-                Add Labels
-            </label>
-            <label>
-                <input type="radio" name="mode" value="delete">
-                Delete Arrows
-            </label>
+        <div class="control-row">
+            <div class="control-group scale-group">
+                <span class="group-label">Grid Scale:</span>
+                <input type="range" id="scaleSlider" min="1" max="50" value="1" step="1">
+                <span id="scaleDisplay">1 N per cell</span>
+            </div>
         </div>
-        <br>
-        <button id="resetButton">Reset Diagram</button>
-        <button id="screenshotButton">Capture Screenshot</button>
+        <div class="button-row">
+            <button id="undoButton" title="Ctrl+Z">Undo</button>
+            <button id="resetButton">Reset Diagram</button>
+            <button id="screenshotButton">Capture Screenshot</button>
+        </div>
     </div>
-    <canvas id="fbdCanvas" width="400" height="400"></canvas>
-    <div id="labelDialog" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; padding:20px; border:1px solid black; z-index:1000;">
+    <canvas id="fbdCanvas" width="600" height="600"></canvas>
+    <div id="labelDialog">
         <h3>Enter Label</h3>
-        <label>Main Text: <input type="text" id="mainLabelInput"></label><br><br>
-        <label>Subscript: <input type="text" id="subLabelInput"></label><br><br>
-        <button id="labelOkButton">OK</button>
-        <button id="labelCancelButton">Cancel</button>
+        <label>Main Text: <input type="text" id="mainLabelInput"></label>
+        <label>Subscript: <input type="text" id="subLabelInput"></label>
+        <div class="dialog-buttons">
+            <button id="labelOkButton">OK</button>
+            <button id="labelCancelButton">Cancel</button>
+        </div>
     </div>
+    <div id="labelDialogOverlay"></div>
     <div id="forceList"></div>
     <script src="script.js"></script>
 </body>
